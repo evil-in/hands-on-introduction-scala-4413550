@@ -12,10 +12,9 @@ class EtlSpec extends AnyFreeSpec with Matchers {
       val expectedFileContents = List("hello world")
       etl(input, output)
       readFile(output) shouldEqual Success(expectedFileContents)
-
     }
   }
+
   private def readFile(filePath: String): Try[List[String]] =
     Using(Source.fromFile(filePath))(_.getLines.toList)
-
 }

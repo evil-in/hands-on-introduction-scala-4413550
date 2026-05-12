@@ -13,13 +13,14 @@ def etl(inputFilePath: String, outputFilePath: String): Unit =
   load(transformed, outputFilePath)
 end etl
 
-def extract(input: String): List[String] = Using.resource(Source.fromFile(input))(res => res.getLines.toList)
+def extract(input: String): List[String] =
+  Using.resource(Source.fromFile(input))(res => res.getLines.toList)
 
-def transform(data: List[String]): List[String] = data.map(line => line.toLowerCase)
+def transform(data: List[String]): List[String] =
+  data.map(line => line.toLowerCase)
 
 def load(data: List[String], output: String = "src/main/resources/output.txt"): Unit =
-  val file = new File(output)
-  val fileWriter = new FileWriter(file)
-  fileWriter.write(data.mkString("\n"))
-  fileWriter.close()
+  Using.resource(new FileWriter(new File(output))) { fw =>
+    fw.write(data.mkString("\n"))
+  }
 end load
